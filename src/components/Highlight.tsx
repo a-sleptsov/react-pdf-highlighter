@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { FC } from 'react';
 
-import "../style/Highlight.css";
+import '../style/Highlight.css';
 
-import type { LTWHP } from "../types.js";
+import type { LTWHP } from '../types.js';
+
+const EMPTY_FUNC = () => {};
 
 interface Props {
   position: {
@@ -19,49 +21,57 @@ interface Props {
   isScrolledTo: boolean;
 }
 
-export class Highlight extends Component<Props> {
-  render() {
-    const {
-      position,
-      onClick,
-      onMouseOver,
-      onMouseOut,
-      comment,
-      isScrolledTo,
-    } = this.props;
+export const Highlight: FC<Props> = ({
+  position,
+  onClick,
+  onMouseOver,
+  onMouseOut,
+  comment,
+  isScrolledTo,
+}) => {
+  const { rects, boundingRect } = position;
 
-    const { rects, boundingRect } = position;
-
-    return (
-      <div
-        className={`Highlight ${isScrolledTo ? "Highlight--scrolledTo" : ""}`}
-      >
-        {comment ? (
-          <div
-            className="Highlight__emoji"
-            style={{
-              left: 20,
-              top: boundingRect.top,
-            }}
-          >
-            {comment.emoji}
-          </div>
-        ) : null}
-        <div className="Highlight__parts">
-          {rects.map((rect, index) => (
-            <div
-              onMouseOver={onMouseOver}
-              onMouseOut={onMouseOut}
-              onClick={onClick}
-              key={index}
-              style={rect}
-              className={`Highlight__part`}
-            />
-          ))}
+  return (
+    <div
+      className={`Highlight ${isScrolledTo ? 'Highlight--scrolledTo' : ''}`}
+    >
+      {comment ? (
+        <div
+          className="Highlight__emoji"
+          style={{
+            left: 20,
+            top: boundingRect.top,
+          }}
+        >
+          {comment.emoji}
         </div>
+      ) : null}
+      <div className="Highlight__parts">
+        {rects.map((rect) => (
+          <div
+            role="button"
+            aria-label="Highlight part"
+            tabIndex={-1}
+            onKeyDown={(event) => event.preventDefault()}
+            onBlur={(event) => event.preventDefault()}
+            onFocus={(event) => event.preventDefault()}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onClick={onClick}
+            key={rect.left}
+            style={rect}
+            className="Highlight__part"
+          />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Highlight.defaultProps = {
+  onClick: EMPTY_FUNC,
+  onMouseOver: EMPTY_FUNC,
+  onMouseOut: EMPTY_FUNC,
+};
 
 export default Highlight;
