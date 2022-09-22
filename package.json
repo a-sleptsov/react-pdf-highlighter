@@ -19,7 +19,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "(cd ./example && vite)",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:copy-styles && npm run build:example",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:copy-styles",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir ./dist/cjs",
     "build:copy-styles": "cp -r ./src/style ./dist/esm; cp -r ./src/style ./dist/cjs",
@@ -64,6 +64,8 @@
     "jest-puppeteer": "^6.1.0",
     "prettier": "^2.3.2",
     "puppeteer": "^9.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "typescript": "4.4.2",
     "vite": "^2.8.0"
   },

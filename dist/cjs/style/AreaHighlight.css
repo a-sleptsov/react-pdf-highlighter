@@ -1,0 +1,10 @@
+.AreaHighlight {
+  cursor: pointer;
+  position: absolute;
+  background: rgba(255, 226, 143, 1);
+  transition: background 0.3s;
+}
+
+.AreaHighlight.scrolledTo {
+  background: #ff4141;
+}
