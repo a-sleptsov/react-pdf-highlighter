@@ -29,7 +29,7 @@ export interface ScaledPosition {
 }
 export interface Content {
     text?: string;
-    image?: string;
+    image?: Promise<Blob | null>;
 }
 export interface HighlightContent {
     content: Content;

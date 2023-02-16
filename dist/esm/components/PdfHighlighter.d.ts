@@ -13,7 +13,7 @@ interface State<T_HT> {
         position: ScaledPosition;
         content?: {
             text?: string;
-            image?: string;
+            image?: Promise<Blob | null>;
         };
     } | null;
     isCollapsed: boolean;
@@ -28,7 +28,7 @@ interface State<T_HT> {
     scrolledToHighlightId: string;
 }
 interface Props<T_HT> {
-    highlightTransform: (highlight: T_ViewportHighlight<T_HT>, index: number, setTip: (highlight: T_ViewportHighlight<T_HT>, callback: (highlight: T_ViewportHighlight<T_HT>) => JSX.Element) => void, hideTip: () => void, viewportToScaled: (rect: LTWHP) => Scaled, screenshot: (position: LTWH) => string, isScrolledTo: boolean) => JSX.Element;
+    highlightTransform: (highlight: T_ViewportHighlight<T_HT>, index: number, setTip: (highlight: T_ViewportHighlight<T_HT>, callback: (highlight: T_ViewportHighlight<T_HT>) => JSX.Element) => void, hideTip: () => void, viewportToScaled: (rect: LTWHP) => Scaled, screenshot: (position: LTWH) => Promise<Blob | null>, isScrolledTo: boolean) => JSX.Element;
     highlights: Array<T_HT>;
     onScrollChange: () => void;
     scrollRef: (scrollTo: (highlight: IHighlight) => void) => void;
@@ -36,7 +36,7 @@ interface Props<T_HT> {
     pdfScaleValue: string;
     onSelectionFinished: (position: ScaledPosition, content: {
         text?: string;
-        image?: string;
+        image?: Promise<Blob | null>;
     }, hideTipAndSelection: () => void, transformSelection: () => void) => JSX.Element | null;
     enableAreaSelection: (event: MouseEvent) => boolean;
 }
@@ -64,7 +64,7 @@ export declare class PdfHighlighter<T_HT extends IHighlight> extends PureCompone
     showTip(highlight: T_ViewportHighlight<T_HT>, content: JSX.Element): void;
     scaledPositionToViewport({ pageNumber, boundingRect, rects, usePdfCoordinates, }: ScaledPosition): Position;
     viewportPositionToScaled({ pageNumber, boundingRect, rects, }: Position): ScaledPosition;
-    screenshot(position: LTWH, pageNumber: number): string;
+    screenshot(position: LTWH, pageNumber: number): Promise<Blob | null>;
     renderHighlights(nextProps?: Props<T_HT>): void;
     hideTipAndSelection: () => void;
     setTip(position: Position, inner: JSX.Element | null): void;

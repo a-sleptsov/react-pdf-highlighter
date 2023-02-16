@@ -2,15 +2,29 @@
 // "viewport" rectangle is { top, left, width, height }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.scaledToViewport = exports.viewportToScaled = void 0;
-const viewportToScaled = (rect, { width, height }) => {
+const PAGE_NUMBER_KEY = 'pageNumber';
+const getScaledRect = (rect, scale) => {
+    const newRect = Object.assign({}, rect);
+    const rectEntries = Object.entries(newRect);
+    rectEntries.forEach(([key, value]) => {
+        if (key !== PAGE_NUMBER_KEY) {
+            newRect[key] = value / scale;
+        }
+    });
+    return newRect;
+};
+const viewportToScaled = (rect, { width, height, scale, }) => {
+    const scaledRect = getScaledRect(rect, scale);
+    const scaledWidth = width / scale;
+    const scaledHeight = height / scale;
     return {
-        x1: rect.left,
-        y1: rect.top,
-        x2: rect.left + rect.width,
-        y2: rect.top + rect.height,
-        width,
-        height,
-        pageNumber: rect.pageNumber,
+        x1: scaledRect.left,
+        y1: scaledRect.top,
+        x2: scaledRect.left + scaledRect.width,
+        y2: scaledRect.top + scaledRect.height,
+        width: scaledWidth,
+        height: scaledHeight,
+        pageNumber: scaledRect.pageNumber,
     };
 };
 exports.viewportToScaled = viewportToScaled;
@@ -35,7 +49,7 @@ const scaledToViewport = (scaled, viewport, usePdfCoordinates = false) => {
         return pdfToViewport(scaled, viewport);
     }
     if (scaled.x1 === undefined) {
-        throw new Error("You are using old position format, please update");
+        throw new Error('You are using old position format, please update');
     }
     const x1 = (width * scaled.x1) / scaled.width;
     const y1 = (height * scaled.y1) / scaled.height;
