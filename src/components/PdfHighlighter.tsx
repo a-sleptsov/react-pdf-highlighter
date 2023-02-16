@@ -46,7 +46,7 @@ type T_ViewportHighlight<T_HT> = { position: Position } & T_HT;
 interface State<T_HT> {
   ghostHighlight: {
     position: ScaledPosition;
-    content?: { text?: string; image?: string };
+    content?: { text?: string; image?: Promise<Blob | null> };
   } | null;
   isCollapsed: boolean;
   range: Range | null;
@@ -70,7 +70,7 @@ interface Props<T_HT> {
     ) => void,
     hideTip: () => void,
     viewportToScaled: (rect: LTWHP) => Scaled,
-    screenshot: (position: LTWH) => string,
+    screenshot: (position: LTWH) => Promise<Blob | null>,
     isScrolledTo: boolean
   ) => JSX.Element;
   highlights: Array<T_HT>;
@@ -80,7 +80,7 @@ interface Props<T_HT> {
   pdfScaleValue: string;
   onSelectionFinished: (
     position: ScaledPosition,
-    content: { text?: string; image?: string },
+    content: { text?: string; image?: Promise<Blob | null> },
     hideTipAndSelection: () => void,
     transformSelection: () => void
   ) => JSX.Element | null;
@@ -303,10 +303,11 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     };
   }
 
-  screenshot(position: LTWH, pageNumber: number) {
-    const canvas = this.viewer.getPageView(pageNumber - 1).canvas;
+  async screenshot(position: LTWH, pageNumber: number) {
+    const { pdfDocument } = this.props;
+    const { scale = 1 } = this.viewer.getPageView(pageNumber - 1).viewport;
 
-    return getAreaAsPng(canvas, position);
+    return await getAreaAsPng({ pdfDocument, position, scale });
   }
 
   renderHighlights(nextProps?: Props<T_HT>) {

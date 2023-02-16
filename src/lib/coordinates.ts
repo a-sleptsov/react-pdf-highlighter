@@ -4,28 +4,52 @@
 // for clarity reasons I decided not to store actual (0, 1) coordinates, but
 // provide width and height, so user can compute ratio himself if needed
 
-import type { LTWHP, Scaled, Viewport } from "../types";
+import type { LTWHP, Scaled, Viewport } from '../types';
 
-interface WIDTH_HEIGHT {
+interface PAGE_DIMENSIONS {
   width: number;
   height: number;
+  scale: number;
 }
+
+const PAGE_NUMBER_KEY = 'pageNumber';
+
+const getScaledRect = (rect: LTWHP, scale: number) => {
+  const newRect = { ...rect };
+  const rectEntries = Object.entries(newRect);
+
+  rectEntries.forEach(([key, value]) => {
+    if (key !== PAGE_NUMBER_KEY) {
+      newRect[key as keyof LTWHP] = value / scale;
+    }
+  });
+
+  return newRect;
+};
 
 export const viewportToScaled = (
   rect: LTWHP,
-  { width, height }: WIDTH_HEIGHT
-): Scaled => {
-  return {
-    x1: rect.left,
-    y1: rect.top,
-
-    x2: rect.left + rect.width,
-    y2: rect.top + rect.height,
-
+  {
     width,
     height,
+    scale,
+  }: PAGE_DIMENSIONS,
+): Scaled => {
+  const scaledRect = getScaledRect(rect, scale);
+  const scaledWidth = width / scale;
+  const scaledHeight = height / scale;
 
-    pageNumber: rect.pageNumber,
+  return {
+    x1: scaledRect.left,
+    y1: scaledRect.top,
+
+    x2: scaledRect.left + scaledRect.width,
+    y2: scaledRect.top + scaledRect.height,
+
+    width: scaledWidth,
+    height: scaledHeight,
+
+    pageNumber: scaledRect.pageNumber,
   };
 };
 
@@ -51,7 +75,7 @@ const pdfToViewport = (pdf: Scaled, viewport: Viewport): LTWHP => {
 export const scaledToViewport = (
   scaled: Scaled,
   viewport: Viewport,
-  usePdfCoordinates: boolean = false
+  usePdfCoordinates: boolean = false,
 ): LTWHP => {
   const { width, height } = viewport;
 
@@ -60,7 +84,7 @@ export const scaledToViewport = (
   }
 
   if (scaled.x1 === undefined) {
-    throw new Error("You are using old position format, please update");
+    throw new Error('You are using old position format, please update');
   }
 
   const x1 = (width * scaled.x1) / scaled.width;
