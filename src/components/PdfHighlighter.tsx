@@ -466,7 +466,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     // wait for scrolling to finish
     setTimeout(() => {
       this.viewer.container.addEventListener("scroll", this.onScroll);
-    }, 100);
+    }, 400);
   };
 
   onDocumentReady = () => {
