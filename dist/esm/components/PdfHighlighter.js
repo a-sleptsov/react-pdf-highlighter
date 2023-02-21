@@ -139,7 +139,7 @@ export class PdfHighlighter extends PureComponent {
             // wait for scrolling to finish
             setTimeout(() => {
                 this.viewer.container.addEventListener("scroll", this.onScroll);
-            }, 100);
+            }, 400);
         };
         this.onDocumentReady = () => {
             const { scrollRef } = this.props;
