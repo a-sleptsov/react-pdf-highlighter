@@ -167,6 +167,9 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     if (prevProps.highlights !== this.props.highlights) {
       this.renderHighlights(this.props);
     }
+    if (prevProps.enableAreaSelection !== this.props.enableAreaSelection) {
+      this.renderHighlights(this.props);
+    }
   }
 
   init() {

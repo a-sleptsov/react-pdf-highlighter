@@ -265,6 +265,9 @@ class PdfHighlighter extends react_1.PureComponent {
         if (prevProps.highlights !== this.props.highlights) {
             this.renderHighlights(this.props);
         }
+        if (prevProps.enableAreaSelection !== this.props.enableAreaSelection) {
+            this.renderHighlights(this.props);
+        }
     }
     init() {
         const { pdfDocument } = this.props;
