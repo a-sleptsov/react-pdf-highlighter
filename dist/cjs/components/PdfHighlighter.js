@@ -74,6 +74,7 @@ class PdfHighlighter extends react_1.PureComponent {
         this.eventBus = new pdf_viewer_1.EventBus();
         this.linkService = new pdf_viewer_1.PDFLinkService({
             eventBus: this.eventBus,
+            ignoreDestinationZoom: true,
             externalLinkTarget: 2,
         });
         this.resizeObserver = null;

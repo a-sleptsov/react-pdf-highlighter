@@ -49,6 +49,7 @@ export class PdfHighlighter extends PureComponent {
         this.eventBus = new EventBus();
         this.linkService = new PDFLinkService({
             eventBus: this.eventBus,
+            ignoreDestinationZoom: true,
             externalLinkTarget: 2,
         });
         this.resizeObserver = null;

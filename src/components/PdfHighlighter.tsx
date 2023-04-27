@@ -111,6 +111,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   eventBus = new EventBus();
   linkService = new PDFLinkService({
     eventBus: this.eventBus,
+    ignoreDestinationZoom: true,
     externalLinkTarget: 2,
   });
 
